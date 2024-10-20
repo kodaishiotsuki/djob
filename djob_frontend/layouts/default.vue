@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import { useUserStore } from "~/stores/user";
+
+const userStore = useUserStore();
+</script>
 
 <template>
   <div>
@@ -19,16 +23,34 @@
       <p class="text-gray-300">Copyright (c) 2024 - Djob</p>
 
       <div class="flex mt-6 md:mt-0 items-center space-x-4">
-        <NuxtLink
-          to="/login"
-          class="py-4 px-6 bg-teal-900 hover:bg-teal-700 text-white rounded-xl"
-          >Log in</NuxtLink
-        >
-        <NuxtLink
-          to="/signup"
-          class="py-4 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
-          >Sign up</NuxtLink
-        >
+        <template v-if="userStore.user.isAuthenticated">
+          <NuxtLink
+            to="/myjobs"
+            class="py-4 px-6 bg-teal-900 hover:bg-teal-700 text-white rounded-xl"
+            >My jobs</NuxtLink
+          >
+          <NuxtLink
+            to="/createjob"
+            class="py-4 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+            >Create job</NuxtLink
+          >
+          <NuxtLink
+            class="py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white rounded-xl"
+            >Log out</NuxtLink
+          >
+        </template>
+        <template v-else>
+          <NuxtLink
+            to="/login"
+            class="py-4 px-6 bg-teal-900 hover:bg-teal-700 text-white rounded-xl"
+            >Log in</NuxtLink
+          >
+          <NuxtLink
+            to="/signup"
+            class="py-4 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+            >Sign up</NuxtLink
+          >
+        </template>
       </div>
     </footer>
   </div>
