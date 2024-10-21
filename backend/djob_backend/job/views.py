@@ -53,6 +53,13 @@ class CreateJobView(APIView):
                 'status': 'Bad request',
                 'errors': form.errors
             })
+    
+    def delete(self, request, pk):
+        job = Job.objects.get(pk=pk,created_by=request.user)
+        job.delete()
+        return Response({
+            'status': 'Job deleted'
+        })
             
     
 

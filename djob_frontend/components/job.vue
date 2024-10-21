@@ -1,4 +1,11 @@
 <script setup>
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore();
+
+// 親コンポーネントへイベントを送信するための関数を定義
+const emit = defineEmits(["deleteJob"]);
+
 const props = defineProps({
   my: {
     type: [Boolean],
@@ -7,6 +14,24 @@ const props = defineProps({
     type: [Object],
   },
 });
+
+async function deleteJob(id) {
+  await $fetch("http://127.0.0.1:8000/api/v1/jobs/" + id + "/delete/", {
+    method: "DELETE",
+    headers: {
+      Authorization: "token " + userStore.user.token,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      console.log("response", response);
+      // 親コンポーネントに削除したIDを通知
+      emit("deleteJob", id);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 </script>
 
 <template>
@@ -37,9 +62,13 @@ const props = defineProps({
         v-if="my"
         >Edit</NuxtLink
       >
-      <a class="py-4 px-6 bg-rose-700 text-white rounded-xl" v-if="my"
-        >Delete</a
+      <button
+        @click="deleteJob(job.id)"
+        class="py-4 px-6 bg-rose-700 text-white rounded-xl"
+        v-if="my"
       >
+        Delete
+      </button>
     </div>
   </div>
 </template>
