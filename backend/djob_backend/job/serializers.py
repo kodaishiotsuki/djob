@@ -12,5 +12,5 @@ class JobSerializer(serializers.ModelSerializer):
             'position_salary',
             'position_location',
             'company_name',
-            'creaed_at_formatted',
+            'created_at_formatted',
         )
