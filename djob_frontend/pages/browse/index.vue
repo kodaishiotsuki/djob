@@ -1,4 +1,27 @@
-<script setup></script>
+<script setup>
+const { data: jobCategories } = await useFetch(
+  "http://localhost:8000/api/v1/jobs/categories/"
+);
+
+const selectedCategoryRef = ref("");
+const selectedCategories = [];
+
+function toggleCategory(id) {
+  const index = selectedCategories.indexOf(id);
+
+  if (index === -1) {
+    selectedCategories.push(id);
+  } else {
+    selectedCategories.splice(index, 1);
+  }
+
+  selectedCategoryRef.value = selectedCategories.join(",");
+}
+
+const { data: jobs, error } = await useFetch(
+  `http://localhost:8000/api/v1/jobs/`
+);
+</script>
 
 <template>
   <div class="grid md:grid-cols-4 gap-3 py-10 px-6">
@@ -33,13 +56,23 @@
       <h3 class="mt-6 text-xl text-white">Categories</h3>
 
       <div class="mt-6 space-y-4">
-        <p class="py-4 px-6 text-white rounded-xl">category.title</p>
+        <p
+          v-for="category in jobCategories"
+          v-bind:key="category.id"
+          v-on:click="($event) => toggleCategory(category.id)"
+          class="py-4 px-6 text-white rounded-xl"
+          v-bind:class="{
+            'bg-teal-900': selectedCategoryRef.includes(category.id),
+          }"
+        >
+          {{ category.title }}
+        </p>
       </div>
     </div>
 
     <div class="md:col-span-3">
       <div class="space-y-4">
-        <Job />
+        <Job v-for="job in jobs" v-bind:key="job.id" v-bind:job="job" />
       </div>
     </div>
   </div>
