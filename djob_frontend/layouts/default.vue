@@ -2,6 +2,10 @@
 import { useUserStore } from "~/stores/user";
 
 const userStore = useUserStore();
+
+function logout() {
+  userStore.removeToken();
+}
 </script>
 
 <template>
@@ -34,9 +38,10 @@ const userStore = useUserStore();
             class="py-4 px-6 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
             >Create job</NuxtLink
           >
-          <NuxtLink
+          <a
+            v-on:click="logout"
             class="py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white rounded-xl"
-            >Log out</NuxtLink
+            >Log out</a
           >
         </template>
         <template v-else>
