@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+const { data: jobs, error } = await useFetch(
+  "http://localhost:8000/api/v1/jobs/newest/"
+);
+</script>
 
 <template>
   <div>
@@ -16,7 +20,7 @@
       <h2 class="mb-8 text-2xl text-center">Newest jobs</h2>
 
       <div class="space-y-4">
-        <Job />
+        <Job v-for="job in jobs" v-bind:key="job.id" v-bind:job="job" />
       </div>
     </div>
   </div>
