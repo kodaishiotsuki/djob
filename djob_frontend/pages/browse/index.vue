@@ -1,10 +1,18 @@
 <script setup>
+//Query
+let queryRef = ref("");
+let query = "";
+
+function performSearch() {
+  queryRef.value = query;
+}
+
+// Categories
 const { data: jobCategories } = await useFetch(
   "http://localhost:8000/api/v1/jobs/categories/"
 );
-
-const selectedCategoryRef = ref("");
-const selectedCategories = [];
+let selectedCategoryRef = ref("");
+let selectedCategories = [];
 
 function toggleCategory(id) {
   const index = selectedCategories.indexOf(id);
@@ -18,10 +26,12 @@ function toggleCategory(id) {
   selectedCategoryRef.value = selectedCategories.join(",");
 }
 
+// Jobs
 const { data: jobs, error } = await useFetch(
   `http://localhost:8000/api/v1/jobs/`,
   {
     query: {
+      query: queryRef,
       categories: selectedCategoryRef,
     },
   }
@@ -33,12 +43,16 @@ const { data: jobs, error } = await useFetch(
     <div class="md:col-span-1 px-6 py-6 bg-teal-700 rounded-xl">
       <div class="flex space-x-4">
         <input
+          v-model="query"
           type="search"
           placeholder="Find a job..."
           class="w-full px-6 py-4 rounded-xl"
         />
 
-        <button class="px-6 py-4 bg-teal-900 text-white rounded-xl">
+        <button
+          class="px-6 py-4 bg-teal-900 text-white rounded-xl"
+          v-on:click="performSearch"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
