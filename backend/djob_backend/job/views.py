@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status , authentication, permissions
 
+from .forms import JobForm
 from .models import Job ,Category
 from .serializers import JobSerializer, JobDetailSerializer ,CategorySerializer
 
@@ -31,6 +32,28 @@ class MyJobsView(APIView):
         serializer = JobSerializer(jobs, many=True)
         
         return Response(serializer.data)
+    
+
+class CreateJobView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        form = JobForm(request.data)
+
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.created_by = request.user
+            job.save()
+            return Response({
+                'status': 'Job created'
+            })
+        else:
+            return Response({
+                'status': 'Bad request',
+                'errors': form.errors
+            })
+            
     
 
 class BrowseJobsView(APIView):
