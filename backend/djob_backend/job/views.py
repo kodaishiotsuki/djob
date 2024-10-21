@@ -25,6 +25,13 @@ class NewestJobsView(APIView):
 class BrowseJobsView(APIView):
     def get(self, request, format=None):
         jobs = Job.objects.all()
+        categories = request.GET.get('categories','')
+        # print("categories",categories)
+
+        if categories:
+            jobs = jobs.filter(category__id__in=categories.split(','))
+            # print("jobs",jobs)
+
         serializer = JobSerializer(jobs, many=True)
         
         return Response(serializer.data)

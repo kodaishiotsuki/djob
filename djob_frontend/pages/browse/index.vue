@@ -19,7 +19,12 @@ function toggleCategory(id) {
 }
 
 const { data: jobs, error } = await useFetch(
-  `http://localhost:8000/api/v1/jobs/`
+  `http://localhost:8000/api/v1/jobs/`,
+  {
+    query: {
+      categories: selectedCategoryRef,
+    },
+  }
 );
 </script>
 
