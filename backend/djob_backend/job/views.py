@@ -22,6 +22,17 @@ class NewestJobsView(APIView):
         return Response(serializer.data)
     
 
+class MyJobsView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        jobs = Job.objects.filter(created_by=request.user)
+        serializer = JobSerializer(jobs, many=True)
+        
+        return Response(serializer.data)
+    
+
 class BrowseJobsView(APIView):
     def get(self, request, format=None):
         jobs = Job.objects.all()
