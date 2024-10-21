@@ -60,6 +60,21 @@ class CreateJobView(APIView):
         return Response({
             'status': 'Job deleted'
         })
+    
+    def put(self, request, pk):
+        job = Job.objects.get(pk=pk,created_by=request.user)
+        form = JobForm(request.data, instance=job)
+
+        if form.is_valid():
+            form.save()
+            return Response({
+                'status': 'Job updated'
+            })
+        else:
+            return Response({
+                'status': 'Bad request',
+                'errors': form.errors
+            })
             
     
 

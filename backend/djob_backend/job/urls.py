@@ -10,4 +10,5 @@ urlpatterns = [
     path('newest/', NewestJobsView.as_view(),),
     path('<int:pk>/', JobsDetailView.as_view(),),
     path('<int:pk>/delete/', CreateJobView.as_view(),),
+    path('<int:pk>/edit/', CreateJobView.as_view(),),
 ]
